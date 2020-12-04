@@ -1,1 +1,4 @@
 - options to keep multiline comment style
+- update readme
+- add to pypi
+- fix: oneline needs a \n before

@@ -5,45 +5,53 @@ class NotSupportedError(Exception):
     pass
 
 
-def multiline_variations(line):
-    """
-                elif line.__contains__("*/"):
-                line_sec1 = line.split("*/")
-    """
+line_types = {
+    "code": {
+        "before": " ",
+        "after": ""
+    },
+    "preprocessor": {
+        "before": "",
+        "after": "\n"
+    },
+    "code with comment": {
+        "before": " ",
+        "after": "\n"
+    },
+    "oneline comment": {
+        "before": "\n",
+        "after": "\n"
+    },
+    "multiline wholeline": {
+        "before": "\n",
+        "after": "\n"
+    },
+    "multiline start": {
+        "before": "\n",
+        "after": "\n"
+    },
+    "multiline continue": {
+        "before": '',
+        "after": "\n"
+    },
+    "multiline end": {
+        "before": '',
+        "after": "\n"
+    }
+}
 
 
 def concatenate(lines):
 
-    needs_newline_after = [
-        "oneline",
-        "normal with comment",
-        "multiline start",
-        "multiline continue",
-        "multiline end",
-        "multiline wholeline"
-    ]
-
     length = len(lines)
 
+    content = ""
     index = 0
-    line = lines[index][0]
-    line_type = lines[index][1]
-
-    content = line
-    index += 1
     while index < length:
-        new_content = ""
-        if line_type in needs_newline_after:
-            new_content += "\n"
-
         line = lines[index][0]
         line_type = lines[index][1]
-
-        if line_type == "normal":
-            new_content += " "
-        new_content += line
-
-        content += new_content
+        needs = line_types[line_type]
+        content += needs["before"] + line + needs["after"]
         index += 1
     return content
 
@@ -56,7 +64,7 @@ def labelize(lines):
         line = lines[index]
 
         if line.startswith("//"):
-            out.append((line, "oneline"))
+            out.append((line, "oneline comment"))
 
         elif line.startswith("/*"):
             if line.endswith("*/"):
@@ -78,9 +86,9 @@ def labelize(lines):
             out.append((line, "preprocessor"))
 
         elif line.__contains__("/*") or line.__contains__("//"):
-            out.append((line, "normal with comment"))
+            out.append((line, "code with comment"))
         else:
-            out.append((line, "normal"))
+            out.append((line, "code"))
 
         index += 1
 

@@ -3,7 +3,7 @@
 
 from setuptools import setup
 
-__version__ = '0.0.1'
+__version__ = '0.1.0'
 __author__ = 'Zaman'
 __contact__ = '7amaaan@gmail.com'
 __url__ = 'https://github.com/7aman/ezform'
